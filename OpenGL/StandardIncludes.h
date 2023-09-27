@@ -17,8 +17,14 @@
 #include <GL/glew.h> // Include GLEW
 #include <GLFW/glfw3.h> // Include GLFW
 #include <glm/glm.hpp> // Include GLM
+#include <glm/ext.hpp> // Open Experimental to_string
+#include <glm/gtx/string_cast.hpp> // Override cast for the experimental to_string
+#include <glm/gtc/matrix_transform.hpp> // View / Projection
 
 #include "Singleton.h"
+#include "Resolution.h"
+
+#define GLM_ENABLE_EXPERIMENTAL
 
 using namespace std;
 
