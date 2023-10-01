@@ -65,7 +65,7 @@ void Mesh::Render(glm::mat4 _wvp)
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	glDrawArrays(GL_LINE_STRIP, 0, m_vertexData.size() / 7); 	// Draw Lines
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 7); 	// Draw Lines
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
 }
