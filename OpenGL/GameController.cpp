@@ -16,17 +16,18 @@ void GameController::Initialize()
 	M_ASSERT(glewInit() == GLEW_OK, " Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Black background
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	// Create a default perspectice camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
+	//m_mesh.HandleInput(window, position, rotate);
 }
 
 void GameController::RunGame()
 {
 	//Show the C++/ CLI tool window
 	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	window->Show();
+	window->Hide(); // Tool window hidden window->Show()
 
 	// Create and compile our GLSL program from the shaders
 	m_shader = Shader();
