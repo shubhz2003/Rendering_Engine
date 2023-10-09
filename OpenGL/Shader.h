@@ -16,6 +16,7 @@ public:
 	GLuint GetAttrColors() { return m_attrColors; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetSampler1() { return m_sampler1; }
+	GLuint GetSampler2() { return m_sampler2; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
@@ -36,6 +37,7 @@ private:
 	GLuint m_attrTexCoords; // Handle for Texture coordinates
 	GLuint m_attrWVP;
 	GLuint m_sampler1;
+	GLuint m_sampler2;
 	GLint m_result;
 	int m_infoLogLength;
 };
