@@ -14,6 +14,8 @@ public:
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
+	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
+	GLuint GetSampler1() { return m_sampler1; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
@@ -31,7 +33,9 @@ private:
 	GLuint m_programID;  // ID of the shader program
 	GLuint m_attrVertices; // Handle for the attribute vertex buffer
 	GLuint m_attrColors; // Handle for colors
+	GLuint m_attrTexCoords; // Handle for Texture coordinates
 	GLuint m_attrWVP;
+	GLuint m_sampler1;
 	GLint m_result;
 	int m_infoLogLength;
 };
