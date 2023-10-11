@@ -89,10 +89,12 @@ void Mesh::Render(glm::mat4 _wvp)
 		(void*)(6 * sizeof(float)));	// array bufffer offset
 
 	// 4th attribute : WVP
-	m_world = glm::rotate(m_world, 0.01f, { 0, 1, 0 }); // Y-axis rotation
-	_wvp *= m_world;
-	/*m_rotation.y += 0.005f;
-	glm::mat4 transform = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));*/
+	//m_world = glm::rotate(m_world, 0.01f, { 0, 1, 0 }); // Y-axis rotation
+	//_wvp *= m_world;
+
+	m_rotation.y += 0.005f;
+	_wvp = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));
+
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // Bind the vertex buffer
