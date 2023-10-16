@@ -8,9 +8,12 @@ Mesh::Mesh()
 	m_texture2 = { };
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
-	m_world = glm::mat4(1.0f);
 	m_position = { 0, 0, 0 };
 	m_rotation = { 0, 0, 0 };
+	m_scale = { 1, 1, 1 };
+	m_world = glm::mat4();
+	m_lightPosition = { 0, 0, 0 };
+	m_lightColor = { 1, 1, 1 };
 }
 
 Mesh::~Mesh()
@@ -35,6 +38,7 @@ void Mesh::Create(Shader* _shader)
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
 
+#pragma region VertexData
 	m_vertexData = { 
 		/* Position */				/* Normals */	/* Texture Coords*/
 		-0.5f, -0.5f, -0.5f,	 0.0f, 0.0f, -1.0f,	 0.0f, 0.0f,
@@ -74,6 +78,7 @@ void Mesh::Create(Shader* _shader)
 		-0.5f, 0.5f, 0.5f,		 0.0f, 1.0f, 0.0f,	 0.0f, 0.0f,
 		-0.5f, 0.5f, -0.5f,		 0.0f, 1.0f, 0.0f,	 0.0f, 1.0f
 	};
+#pragma endregion
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -81,13 +86,8 @@ void Mesh::Create(Shader* _shader)
 
 }
 
-void Mesh::Render(glm::mat4 _wvp)
+void Mesh::BindAttributes()
 {
-	glUseProgram(m_shader->GetProgramID()); // Use our shader
-	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
-	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
-	m_shader->SetVec3("LightDirection", { 1.0f, 0.5f, 0.0f });
-	m_shader->SetVec3("LightColor", { 0.5f, 0.9f, 0.5f });
 
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
@@ -96,7 +96,7 @@ void Mesh::Render(glm::mat4 _wvp)
 		GL_FLOAT,			// type
 		GL_FALSE,			// normalized?
 		8 * sizeof(float),	// stride (8 floats per vertex definition)
-		(void*) 0);			// array bufffer offset
+		(void*)0);			// array bufffer offset
 
 	// 2nd attribute buffer : normals
 	glEnableVertexAttribArray(m_shader->GetAttrNormals());
@@ -120,19 +120,44 @@ void Mesh::Render(glm::mat4 _wvp)
 	//m_world = glm::rotate(m_world, 0.01f, { 0, 1, 0 }); // Y-axis rotation
 	//_wvp *= m_world;
 
-	m_rotation.y += 0.005f;
-	glm::mat4 translate = glm::translate(_wvp, m_position);
-	glm::mat4 transform = glm::rotate(translate, m_rotation.y, glm::vec3(0, 1, 0));
-	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]);
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // Bind the vertex buffer
-	
+
 	glActiveTexture(GL_TEXTURE);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());
 	glUniform1i(m_shader->GetSampler1(), 0); // Texture unit 0
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture());
 	glUniform1i(m_shader->GetSampler2(), 1); // Texture unit 1
+
+}
+
+void Mesh::CalculateTransform()
+{
+	m_world = glm::translate(glm::mat4(1.0f), m_position);
+	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
+	m_world = glm::scale(m_world, m_scale);
+}
+
+void Mesh::SetShaderVariables(glm::mat4 _wvp)
+{
+	m_shader->SetMat4("World", m_world);
+	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
+	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
+	m_shader->SetVec3("LightPosition", m_lightPosition);
+	m_shader->SetVec3("LightColor", m_lightColor);
+	m_shader->SetMat4("WVP", _wvp * m_world);
+}
+
+void Mesh::Render(glm::mat4 _wvp)
+{
+	glUseProgram(m_shader->GetProgramID()); // Use our shader
+	
+	m_rotation.y += 0.005f;
+
+	// Order in which the methods are called matters
+	CalculateTransform();
+	SetShaderVariables(_wvp);
+	BindAttributes();
 
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 8);
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
