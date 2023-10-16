@@ -143,9 +143,12 @@ void Mesh::SetShaderVariables(glm::mat4 _wvp)
 	m_shader->SetMat4("World", m_world);
 	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
 	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
+	m_shader->SetFloat("SpecularStrength", 4);
+	m_shader->SetVec3("SpecularColor", { 3.0f, 3.0f, 3.0f });
 	m_shader->SetVec3("LightPosition", m_lightPosition);
 	m_shader->SetVec3("LightColor", m_lightColor);
 	m_shader->SetMat4("WVP", _wvp * m_world);
+	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 }
 
 void Mesh::Render(glm::mat4 _wvp)
