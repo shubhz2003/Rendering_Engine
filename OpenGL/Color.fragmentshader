@@ -1,12 +1,63 @@
-#version 330
+#version 330 // OpenGL version 3.3 (minimum requirement)
 
-in vec3 retNormal;
+in vec3 retNormal; // MUST use the same name as out variable used by vertex shader
 in vec2 retTexCoord;
 
 out vec4 FragColor;
 
+uniform sampler2D sampler1;
+uniform sampler2D sampler2;
+uniform float YChannel;
+uniform float UChannel;
+uniform float VChannel;
+uniform int RenderInvertColorsChannel;
+
+// Define the conversion matrices as constants
+const mat3 RGBtoYUV = mat3(
+    0.299, 0.587, 0.114,
+    -0.14713, -0.28886, 0.436,
+    0.615, -0.51499, -0.10001
+);
+
+const mat3 YUVtoRGB = mat3(
+    1.0, 0.0, 1.13983,
+    1.0, -0.39465, -0.58060,
+    1.0, 2.03211, 0.0
+);
+
 void main()
 {
-	// Simple Coloring each fragment(pixel) white
-	FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	// Get the RGB values from the texture
+	vec3 rgb = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.5).rgb;
+	
+	// Convert RGB to YUV
+	vec3 yuv = RGBtoYUV * rgb;
+
+	// Scale and normalize YUV by uniform values
+	yuv.x *= YChannel;
+	yuv.y *= UChannel;
+	yuv.z *= VChannel;
+	yuv /= 100.0;
+
+
+	// Convert YUV back to RGB
+	vec3 rgb2 = YUVtoRGB * yuv;
+
+	// Check if RenderInvertColorsChannel is true
+	//Different approach to invert colors
+	//if (RenderInvertColorsChannel == 1) {
+		//Invert the color by subtracting from 1.0
+	//	rgb2 = vec3(1.0) - rgb2;
+	//}
+
+
+	// Check if RenderInvertColorsChannel is true
+	if (RenderInvertColorsChannel == 1) {
+		// Invert the color using inversesqrt function
+		rgb2 = inversesqrt(rgb2);
+	}
+	
+	// Output the final color with the normal component
+	FragColor = vec4(rgb2 * retNormal, 1.0f); // Example4: 2 Textures and colors
+
 }

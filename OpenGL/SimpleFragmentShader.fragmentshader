@@ -12,6 +12,6 @@ void main()
 {
 	//FragColor = texture(sampler1, retTexCoord); // Example1: Texture only
 	//FragColor = texture(sampler1, retTexCoord) * vec4(retColor, 1.0f) ; // Example2: Texture and color
-	//FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) ; // Example3: 2 Textures
-	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f); // Example4: 2 Textures and colors
+	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) ; // Example3: 2 Textures
+	//FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f); // Example4: 2 Textures and colors
 }
