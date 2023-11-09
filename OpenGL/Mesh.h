@@ -47,6 +47,7 @@ private:
 	glm::mat4 m_world;
 
 	// Lights
+	glm::vec3 m_lightDirection;
 	glm::vec3 m_lightPosition;
 	glm::vec3 m_lightColor;
 	glm::vec3 m_cameraPosition;
