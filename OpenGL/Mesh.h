@@ -17,8 +17,8 @@ public:
 	void SetPosition(glm::vec3 _position) { m_position = _position; }
 	glm::vec3 GetPosition() { return m_position; }
 	void SetScale(glm::vec3 _scale) { m_scale = _scale; }
-	void SetLightPosition(glm::vec3 _lightPosition) { m_lightPosition = _lightPosition; }
-	void SetLightColor(glm::vec3 _lightColor) { m_lightColor = _lightColor; }
+	void SetColor(glm::vec3 _color) { m_color = _color; }
+	glm::vec3 GetColor() { return m_color; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
 
 	// Methods
@@ -27,10 +27,14 @@ public:
 	void CalculateTransform();
 	void Render(glm::mat4 _wvp);	//Technically _wvp is only _vp since world matrix exists in this contextand mesh has its own
 
+	//Members
+	static vector<Mesh> Lights;
+
 private:
 	// Methods
 	void SetShaderVariables(glm::mat4 _wvp);
 	void BindAttributes();
+	string Concat(string _s1, int _index, string _s2);
 
 	Shader* m_shader;
 	Texture m_texture;
@@ -45,11 +49,8 @@ private:
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
 	glm::mat4 m_world;
-
-	// Lights
-	glm::vec3 m_lightPosition;
-	glm::vec3 m_lightColor;
 	glm::vec3 m_cameraPosition;
+	glm::vec3 m_color;
 };
 
 #endif // !MESH_H
