@@ -78,7 +78,11 @@ void GameController::RunGame()
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed
 
-	m_meshLight.Cleanup();
+	for (int count = 0; count < Mesh::Lights.size(); count++)
+	{
+		Mesh::Lights[count].Cleanup();
+	}
+
 	for (unsigned int count = 0; count < m_meshBoxes.size(); count++)
 	{
 		m_meshBoxes[count].Cleanup();
