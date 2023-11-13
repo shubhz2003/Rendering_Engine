@@ -74,6 +74,7 @@ void Mesh::Create(Shader* _shader, string _file)
 
 void Mesh::BindAttributes()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // Bind the vertex buffer
 
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
@@ -101,8 +102,6 @@ void Mesh::BindAttributes()
 		GL_FALSE,						// normalized?
 		8 * sizeof(float),				// stride (8 floats per vertex definition)
 		(void*)(6 * sizeof(float)));	// array bufffer offset
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // Bind the vertex buffer
 }
 
 string Mesh::Concat(string _s1, int _index, string _s2)

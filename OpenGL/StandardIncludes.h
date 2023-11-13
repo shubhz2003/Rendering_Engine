@@ -2,8 +2,10 @@
 #define STANDARD_INCLUDES_H
 
 // Include standard headers
-#include <vector>
 #include <string>
+#include <vector>
+#include <map>
+#include <iostream>
 #include <fstream>
 
 // Windows specific includes and defines
@@ -20,6 +22,10 @@
 #include <glm/ext.hpp> // Open Experimental to_string
 #include <glm/gtx/string_cast.hpp> // Override cast for the experimental to_string
 #include <glm/gtc/matrix_transform.hpp> // View / Projection
+
+// Font includes
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "Singleton.h"
 #include "Resolution.h"

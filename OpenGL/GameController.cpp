@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "WindowController.h"
 #include "ToolWindow.h"
+#include "Fonts.h"
 
 GameController::GameController()
 {
@@ -8,7 +9,6 @@ GameController::GameController()
 	m_shaderDiffuse = { };
 	m_camera = { };
 	m_meshBoxes.clear();
-	m_meshLight = { };
 }
 
 void GameController::Initialize()
@@ -18,9 +18,10 @@ void GameController::Initialize()
 	M_ASSERT(glewInit() == GLEW_OK, " Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
-	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	srand(time(0));
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	srand((unsigned int )time(0));
 
 	// Create a default perspectice camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
@@ -33,6 +34,8 @@ void GameController::RunGame()
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
+	m_shaderDiffuse = Shader();
+	m_shaderDiffuse.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 
 	// Create Meshes
 	Mesh m = Mesh();
@@ -49,6 +52,9 @@ void GameController::RunGame()
 	teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshBoxes.push_back(teapot);
 
+	Fonts f = Fonts();
+	f.Create(&m_shaderFont, "arial.ttf", 100);
+
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
@@ -61,6 +67,8 @@ void GameController::RunGame()
 		{
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+
+		f.RenderText("Testing text", 10, 500, 0.5f, { 1.0f, 1.0f, 0.0f });
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap front and back buffers
 		glfwPollEvents();
 
