@@ -7,6 +7,7 @@ GameController::GameController()
 {
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
+	m_shaderFont = { };
 	m_camera = { };
 	m_meshBoxes.clear();
 }
@@ -34,8 +35,8 @@ void GameController::RunGame()
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
-	m_shaderDiffuse = Shader();
-	m_shaderDiffuse.LoadShaders("Font.vertexshader", "Font.fragmentshader");
+	m_shaderFont = Shader();
+	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 
 	// Create Meshes
 	Mesh m = Mesh();
