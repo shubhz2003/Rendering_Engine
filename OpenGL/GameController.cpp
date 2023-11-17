@@ -69,7 +69,7 @@ void GameController::RunGame()
 
 	do
 	{
-		glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/); // Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/ ); // Clear the screen
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++)
 		{
 			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView());
@@ -98,4 +98,4 @@ void GameController::RunGame()
 	}
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
-};
+}
