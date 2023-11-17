@@ -98,4 +98,4 @@ void GameController::RunGame()
 	}
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
-}
+};
