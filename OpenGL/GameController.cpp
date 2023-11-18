@@ -66,9 +66,17 @@ void GameController::RunGame()
 	Mesh plane = Mesh();
 	plane.Create(&m_shaderDiffuse, "../Assets/Models/Plane.obj");
 	plane.SetCameraPosition(m_camera.GetPosition());
-	plane.SetScale({ 0.25f, 0.25f, 0.25f });
+	plane.SetScale({ 0.3f, 0.3f, 0.3f });
 	plane.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshes.push_back(plane);
+
+
+	Mesh window = Mesh();
+	window.Create(&m_shaderDiffuse, "../Assets/Models/Window.obj");
+	window.SetCameraPosition(m_camera.GetPosition());
+	window.SetScale({ 0.1f, 0.1f, 0.1f });
+	window.SetPosition({ 0.0f, 0.0f, 0.0f });
+	m_meshes.push_back(window);
 #pragma endregion CreateMeshes
 
 	Fonts f = Fonts();
