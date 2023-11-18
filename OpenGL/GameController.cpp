@@ -19,9 +19,11 @@ void GameController::Initialize()
 	M_ASSERT(glewInit() == GLEW_OK, " Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 	srand((unsigned int )time(0));
 
 	// Create a default perspectice camera
@@ -49,13 +51,6 @@ void GameController::RunGame()
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
 	Mesh::Lights.push_back(m);
 
-	Mesh teapot = Mesh();
-	teapot.Create(&m_shaderDiffuse, "../Assets/Models/Teapot.obj");
-	teapot.SetCameraPosition(m_camera.GetPosition());
-	teapot.SetScale({ 0.015f, 0.015f, 0.015f });
-	teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
-	m_meshes.push_back(teapot);
-
 	Mesh box = Mesh();
 	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
 	box.SetCameraPosition(m_camera.GetPosition());
@@ -63,20 +58,6 @@ void GameController::RunGame()
 	box.SetPosition({ -1.0f, -1.0f, -1.0f });
 	m_meshes.push_back(box);
 
-	Mesh plane = Mesh();
-	plane.Create(&m_shaderDiffuse, "../Assets/Models/Plane.obj");
-	plane.SetCameraPosition(m_camera.GetPosition());
-	plane.SetScale({ 0.3f, 0.3f, 0.3f });
-	plane.SetPosition({ 0.0f, 0.0f, 0.0f });
-	m_meshes.push_back(plane);
-
-
-	Mesh window = Mesh();
-	window.Create(&m_shaderDiffuse, "../Assets/Models/Window.obj");
-	window.SetCameraPosition(m_camera.GetPosition());
-	window.SetScale({ 0.1f, 0.1f, 0.1f });
-	window.SetPosition({ 0.0f, 0.0f, 0.0f });
-	m_meshes.push_back(window);
 #pragma endregion CreateMeshes
 
 	Fonts f = Fonts();
@@ -84,7 +65,7 @@ void GameController::RunGame()
 
 	do
 	{
-		glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/ ); // Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Clear the screen
 		for (unsigned int count = 0; count < m_meshes.size(); count++)
 		{
 			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
