@@ -41,11 +41,6 @@ namespace OpenGL {
 		ToolWindow(void)
 		{
 			InitializeComponent();
-			RenderRedChannel = checkBoxRedChannel->Checked;
-
-			RenderGreenChannel = checkBoxGreenChannel->Checked;
-
-			RenderBlueChannel = checkBoxBlueChannel->Checked;
 		}
 
 	protected:
@@ -312,15 +307,5 @@ namespace OpenGL {
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 
-	private: System::Void checkBoxRedChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderRedChannel = checkBoxRedChannel->Checked;
-	}
-	private: System::Void checkBoxGreenChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderGreenChannel = checkBoxGreenChannel->Checked;
-	}
-
-	private: System::Void checkBoxBlueChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderBlueChannel = checkBoxBlueChannel->Checked;
-	}
 };
 }
