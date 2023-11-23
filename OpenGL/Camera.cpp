@@ -12,7 +12,7 @@ Camera::Camera()
 
 Camera::Camera(Resolution _screenResolution)
 {
-	m_position = { 0, 0, 0 };
+	m_position = { 2, 2, 2 };
 	m_lookAt = { 0, 0, 0 };
 	m_rotation = { 0, 0, 0 };
 	m_angle = 0;
@@ -28,7 +28,7 @@ Camera::Camera(Resolution _screenResolution)
 
 	// Camera Matrix
 	m_view = glm::lookAt(
-		m_position, // Camera is at (0, 0, 0), in world space
+		m_position, // Camera is at (2, 2, 2), in world space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0) // Head is up (set to 0, -1, 0 to look upside-down)
 	);
