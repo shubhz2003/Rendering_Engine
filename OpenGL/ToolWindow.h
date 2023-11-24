@@ -38,6 +38,7 @@ namespace OpenGL {
 	private: System::Windows::Forms::Label^ label9;
 		   static bool RenderBlueChannel;
 
+	public:
 		ToolWindow(void)
 		{
 			InitializeComponent();
@@ -141,30 +142,39 @@ namespace OpenGL {
 			// trackBar1
 			// 
 			this->trackBar1->Location = System::Drawing::Point(171, 66);
+			this->trackBar1->Maximum = 128;
+			this->trackBar1->Minimum = 1;
 			this->trackBar1->Name = L"trackBar1";
 			this->trackBar1->Size = System::Drawing::Size(254, 45);
 			this->trackBar1->TabIndex = 3;
+			this->trackBar1->Value = 4;
 			// 
 			// trackBar2
 			// 
 			this->trackBar2->Location = System::Drawing::Point(171, 108);
+			this->trackBar2->Maximum = 300;
 			this->trackBar2->Name = L"trackBar2";
 			this->trackBar2->Size = System::Drawing::Size(254, 45);
 			this->trackBar2->TabIndex = 4;
+			this->trackBar2->Value = 100;
 			// 
 			// trackBar3
 			// 
 			this->trackBar3->Location = System::Drawing::Point(171, 151);
+			this->trackBar3->Maximum = 300;
 			this->trackBar3->Name = L"trackBar3";
 			this->trackBar3->Size = System::Drawing::Size(254, 45);
 			this->trackBar3->TabIndex = 5;
+			this->trackBar3->Value = 100;
 			// 
 			// trackBar4
 			// 
 			this->trackBar4->Location = System::Drawing::Point(171, 202);
+			this->trackBar4->Maximum = 300;
 			this->trackBar4->Name = L"trackBar4";
 			this->trackBar4->Size = System::Drawing::Size(254, 45);
 			this->trackBar4->TabIndex = 6;
+			this->trackBar4->Value = 100;
 			// 
 			// button1
 			// 

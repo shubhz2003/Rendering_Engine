@@ -151,7 +151,7 @@ void Mesh::Render(glm::mat4 _wvp)
 {
 	glUseProgram(m_shader->GetProgramID()); // Use our shader
 	
-	m_rotation.x += 0.0005f;
+	m_rotation.x += 0.001f;
 
 	// Order in which the methods are called matters
 	CalculateTransform();

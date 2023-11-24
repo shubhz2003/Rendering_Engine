@@ -30,6 +30,10 @@ void GameController::Initialize()
 
 void GameController::RunGame()
 {
+	// Show the C++/CLI window
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	window->Show();
+
 #pragma region Setupshaders
 	// Create and compile our GLSL program from the shaders
 	m_shaderColor = Shader();
@@ -74,6 +78,8 @@ void GameController::RunGame()
 #pragma region Render
 	do
 	{
+		System::Windows::Forms::Application::DoEvents(); // Handle C++/CLI form events
+
 		// Check if left mouse button is pressed
 		if (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 		{
