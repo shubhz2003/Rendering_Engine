@@ -15,33 +15,53 @@ namespace OpenGL {
 	public ref class ToolWindow : public System::Windows::Forms::Form
 	{
 	public:
-		static bool RenderRedChannel;
-		static bool RenderGreenChannel;
-	private: System::Windows::Forms::RadioButton^ radioButton1;
-	public:
-	private: System::Windows::Forms::RadioButton^ radioButton2;
-	private: System::Windows::Forms::RadioButton^ radioButton3;
-	private: System::Windows::Forms::TrackBar^ trackBar1;
-	private: System::Windows::Forms::TrackBar^ trackBar2;
-	private: System::Windows::Forms::TrackBar^ trackBar3;
-	private: System::Windows::Forms::TrackBar^ trackBar4;
-	private: System::Windows::Forms::Button^ button1;
-	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::Label^ SpecStrength;
-	private: System::Windows::Forms::Label^ SpecColor;
+
+		static float trackBar_R;
+		static float trackBar_G;
+		static float trackBar_B;
+		static float trackBar_SpecStrength;
+		static bool resetLight_Btn;
+		static bool resetTeapot_Btn;
+		static bool moveLight_Channel;
+		static bool colorByPosition_Channel;
+		static bool moveCubesToShpere_Channel;
+
+	private: System::Windows::Forms::RadioButton^ moveLightBtn;
+	private: System::Windows::Forms::RadioButton^ colorByPositionBtn;
+	private: System::Windows::Forms::RadioButton^ moveCubesToSphereBtn;
+
+	private: System::Windows::Forms::TrackBar^ trackBar_SpecStrength_Component;
+	private: System::Windows::Forms::TrackBar^ trackBar_R_Component;
+	private: System::Windows::Forms::TrackBar^ trackBar_G_Component;
+	private: System::Windows::Forms::TrackBar^ trackBar_B_Component;
+
+	private: System::Windows::Forms::Button^ resetLightPosBtn;
+	private: System::Windows::Forms::Button^ resetTeapotPosBtn;
+
+	private: System::Windows::Forms::Label^ SpecStrength_Lbl;
+	private: System::Windows::Forms::Label^ SpecColor_Lbl;
+	private: System::Windows::Forms::Label^ specStrength_LblVal;
 	private: System::Windows::Forms::Label^ RLabel;
 	private: System::Windows::Forms::Label^ GLabel;
 	private: System::Windows::Forms::Label^ BLabel;
-	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::Label^ label9;
-		   static bool RenderBlueChannel;
+
+	private: System::Windows::Forms::Label^ r_LblVal;
+	private: System::Windows::Forms::Label^ g_LblVal;
+	private: System::Windows::Forms::Label^ b_LblVal;
 
 	public:
 		ToolWindow(void)
 		{
 			InitializeComponent();
+			trackBar_R = 100.0f;
+			trackBar_G = 100.0f;
+			trackBar_B = 100.0f;
+			trackBar_SpecStrength = 4.0f;
+			resetLight_Btn = false;
+			resetTeapot_Btn = false;
+			moveLight_Channel = moveLightBtn->Checked;
+			colorByPosition_Channel = colorByPositionBtn->Checked;
+			moveCubesToShpere_Channel = moveCubesToSphereBtn->Checked;
 		}
 
 	protected:
@@ -76,143 +96,152 @@ namespace OpenGL {
 
 		void InitializeComponent(void)
 		{
-			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
-			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
-			this->radioButton3 = (gcnew System::Windows::Forms::RadioButton());
-			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
-			this->trackBar2 = (gcnew System::Windows::Forms::TrackBar());
-			this->trackBar3 = (gcnew System::Windows::Forms::TrackBar());
-			this->trackBar4 = (gcnew System::Windows::Forms::TrackBar());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->SpecStrength = (gcnew System::Windows::Forms::Label());
-			this->SpecColor = (gcnew System::Windows::Forms::Label());
+			this->moveLightBtn = (gcnew System::Windows::Forms::RadioButton());
+			this->colorByPositionBtn = (gcnew System::Windows::Forms::RadioButton());
+			this->moveCubesToSphereBtn = (gcnew System::Windows::Forms::RadioButton());
+			this->trackBar_SpecStrength_Component = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBar_R_Component = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBar_G_Component = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBar_B_Component = (gcnew System::Windows::Forms::TrackBar());
+			this->resetLightPosBtn = (gcnew System::Windows::Forms::Button());
+			this->resetTeapotPosBtn = (gcnew System::Windows::Forms::Button());
+			this->SpecStrength_Lbl = (gcnew System::Windows::Forms::Label());
+			this->SpecColor_Lbl = (gcnew System::Windows::Forms::Label());
 			this->RLabel = (gcnew System::Windows::Forms::Label());
 			this->GLabel = (gcnew System::Windows::Forms::Label());
 			this->BLabel = (gcnew System::Windows::Forms::Label());
-			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->label9 = (gcnew System::Windows::Forms::Label());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar3))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar4))->BeginInit();
+			this->specStrength_LblVal = (gcnew System::Windows::Forms::Label());
+			this->r_LblVal = (gcnew System::Windows::Forms::Label());
+			this->g_LblVal = (gcnew System::Windows::Forms::Label());
+			this->b_LblVal = (gcnew System::Windows::Forms::Label());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_SpecStrength_Component))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_R_Component))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_G_Component))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_B_Component))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// radioButton1
+			// moveLightBtn
 			// 
-			this->radioButton1->AutoSize = true;
-			this->radioButton1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->moveLightBtn->AutoSize = true;
+			this->moveLightBtn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->radioButton1->Location = System::Drawing::Point(34, 12);
-			this->radioButton1->Name = L"radioButton1";
-			this->radioButton1->Size = System::Drawing::Size(88, 17);
-			this->radioButton1->TabIndex = 0;
-			this->radioButton1->TabStop = true;
-			this->radioButton1->Text = L"Move Light";
-			this->radioButton1->UseVisualStyleBackColor = true;
+			this->moveLightBtn->Location = System::Drawing::Point(34, 12);
+			this->moveLightBtn->Name = L"moveLightBtn";
+			this->moveLightBtn->Size = System::Drawing::Size(88, 17);
+			this->moveLightBtn->TabIndex = 0;
+			this->moveLightBtn->TabStop = true;
+			this->moveLightBtn->Text = L"Move Light";
+			this->moveLightBtn->UseVisualStyleBackColor = true;
+			this->moveLightBtn->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::moveLightBtn_CheckedChanged);
 			// 
-			// radioButton2
+			// colorByPositionBtn
 			// 
-			this->radioButton2->AutoSize = true;
-			this->radioButton2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->colorByPositionBtn->AutoSize = true;
+			this->colorByPositionBtn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->radioButton2->Location = System::Drawing::Point(34, 258);
-			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(120, 17);
-			this->radioButton2->TabIndex = 1;
-			this->radioButton2->TabStop = true;
-			this->radioButton2->Text = L"Color by Position";
-			this->radioButton2->UseVisualStyleBackColor = true;
+			this->colorByPositionBtn->Location = System::Drawing::Point(34, 258);
+			this->colorByPositionBtn->Name = L"colorByPositionBtn";
+			this->colorByPositionBtn->Size = System::Drawing::Size(120, 17);
+			this->colorByPositionBtn->TabIndex = 1;
+			this->colorByPositionBtn->TabStop = true;
+			this->colorByPositionBtn->Text = L"Color by Position";
+			this->colorByPositionBtn->UseVisualStyleBackColor = true;
+			this->colorByPositionBtn->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::colorByPositionBtn_CheckedChanged);
 			// 
-			// radioButton3
+			// moveCubesToSphereBtn
 			// 
-			this->radioButton3->AutoSize = true;
-			this->radioButton3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->radioButton3->Location = System::Drawing::Point(34, 316);
-			this->radioButton3->Name = L"radioButton3";
-			this->radioButton3->Size = System::Drawing::Size(154, 17);
-			this->radioButton3->TabIndex = 2;
-			this->radioButton3->TabStop = true;
-			this->radioButton3->Text = L"Move Cubes to Sphere";
-			this->radioButton3->UseVisualStyleBackColor = true;
+			this->moveCubesToSphereBtn->AutoSize = true;
+			this->moveCubesToSphereBtn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->moveCubesToSphereBtn->Location = System::Drawing::Point(34, 316);
+			this->moveCubesToSphereBtn->Name = L"moveCubesToSphereBtn";
+			this->moveCubesToSphereBtn->Size = System::Drawing::Size(154, 17);
+			this->moveCubesToSphereBtn->TabIndex = 2;
+			this->moveCubesToSphereBtn->TabStop = true;
+			this->moveCubesToSphereBtn->Text = L"Move Cubes to Sphere";
+			this->moveCubesToSphereBtn->UseVisualStyleBackColor = true;
+			this->moveCubesToSphereBtn->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::moveCubesToSphereBtn_CheckedChanged);
 			// 
-			// trackBar1
+			// trackBar_SpecStrength_Component
 			// 
-			this->trackBar1->Location = System::Drawing::Point(171, 66);
-			this->trackBar1->Maximum = 128;
-			this->trackBar1->Minimum = 1;
-			this->trackBar1->Name = L"trackBar1";
-			this->trackBar1->Size = System::Drawing::Size(254, 45);
-			this->trackBar1->TabIndex = 3;
-			this->trackBar1->Value = 4;
+			this->trackBar_SpecStrength_Component->Location = System::Drawing::Point(171, 66);
+			this->trackBar_SpecStrength_Component->Maximum = 128;
+			this->trackBar_SpecStrength_Component->Minimum = 1;
+			this->trackBar_SpecStrength_Component->Name = L"trackBar_SpecStrength_Component";
+			this->trackBar_SpecStrength_Component->Size = System::Drawing::Size(254, 45);
+			this->trackBar_SpecStrength_Component->TabIndex = 3;
+			this->trackBar_SpecStrength_Component->Value = 4;
+			this->trackBar_SpecStrength_Component->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_SpecStrength_Component_Scroll);
 			// 
-			// trackBar2
+			// trackBar_R_Component
 			// 
-			this->trackBar2->Location = System::Drawing::Point(171, 108);
-			this->trackBar2->Maximum = 300;
-			this->trackBar2->Name = L"trackBar2";
-			this->trackBar2->Size = System::Drawing::Size(254, 45);
-			this->trackBar2->TabIndex = 4;
-			this->trackBar2->Value = 100;
+			this->trackBar_R_Component->Location = System::Drawing::Point(171, 108);
+			this->trackBar_R_Component->Maximum = 300;
+			this->trackBar_R_Component->Name = L"trackBar_R_Component";
+			this->trackBar_R_Component->Size = System::Drawing::Size(254, 45);
+			this->trackBar_R_Component->TabIndex = 4;
+			this->trackBar_R_Component->Value = 100;
+			this->trackBar_R_Component->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_R_Component_Scroll);
 			// 
-			// trackBar3
+			// trackBar_G_Component
 			// 
-			this->trackBar3->Location = System::Drawing::Point(171, 151);
-			this->trackBar3->Maximum = 300;
-			this->trackBar3->Name = L"trackBar3";
-			this->trackBar3->Size = System::Drawing::Size(254, 45);
-			this->trackBar3->TabIndex = 5;
-			this->trackBar3->Value = 100;
+			this->trackBar_G_Component->Location = System::Drawing::Point(171, 151);
+			this->trackBar_G_Component->Maximum = 300;
+			this->trackBar_G_Component->Name = L"trackBar_G_Component";
+			this->trackBar_G_Component->Size = System::Drawing::Size(254, 45);
+			this->trackBar_G_Component->TabIndex = 5;
+			this->trackBar_G_Component->Value = 100;
+			this->trackBar_G_Component->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_G_Component_Scroll);
 			// 
-			// trackBar4
+			// trackBar_B_Component
 			// 
-			this->trackBar4->Location = System::Drawing::Point(171, 202);
-			this->trackBar4->Maximum = 300;
-			this->trackBar4->Name = L"trackBar4";
-			this->trackBar4->Size = System::Drawing::Size(254, 45);
-			this->trackBar4->TabIndex = 6;
-			this->trackBar4->Value = 100;
+			this->trackBar_B_Component->Location = System::Drawing::Point(171, 202);
+			this->trackBar_B_Component->Maximum = 300;
+			this->trackBar_B_Component->Name = L"trackBar_B_Component";
+			this->trackBar_B_Component->Size = System::Drawing::Size(254, 45);
+			this->trackBar_B_Component->TabIndex = 6;
+			this->trackBar_B_Component->Value = 100;
+			this->trackBar_B_Component->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_B_Component_Scroll);
 			// 
-			// button1
+			// resetLightPosBtn
 			// 
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->button1->Location = System::Drawing::Point(47, 35);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(121, 23);
-			this->button1->TabIndex = 7;
-			this->button1->Text = L"Reset Light Position";
-			this->button1->UseVisualStyleBackColor = true;
+			this->resetLightPosBtn->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->resetLightPosBtn->Location = System::Drawing::Point(47, 35);
+			this->resetLightPosBtn->Name = L"resetLightPosBtn";
+			this->resetLightPosBtn->Size = System::Drawing::Size(121, 23);
+			this->resetLightPosBtn->TabIndex = 7;
+			this->resetLightPosBtn->Text = L"Reset Light Position";
+			this->resetLightPosBtn->UseVisualStyleBackColor = true;
+			this->resetLightPosBtn->Click += gcnew System::EventHandler(this, &ToolWindow::resetLightPosBtn_Click);
 			// 
-			// button2
+			// resetTeapotPosBtn
 			// 
-			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->button2->Location = System::Drawing::Point(47, 282);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(121, 23);
-			this->button2->TabIndex = 8;
-			this->button2->Text = L"Reset Teapot Position";
-			this->button2->UseVisualStyleBackColor = true;
+			this->resetTeapotPosBtn->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->resetTeapotPosBtn->Location = System::Drawing::Point(47, 282);
+			this->resetTeapotPosBtn->Name = L"resetTeapotPosBtn";
+			this->resetTeapotPosBtn->Size = System::Drawing::Size(121, 23);
+			this->resetTeapotPosBtn->TabIndex = 8;
+			this->resetTeapotPosBtn->Text = L"Reset Teapot Position";
+			this->resetTeapotPosBtn->UseVisualStyleBackColor = true;
+			this->resetTeapotPosBtn->Click += gcnew System::EventHandler(this, &ToolWindow::resetTeapotPosBtn_Click);
 			// 
-			// SpecStrength
+			// SpecStrength_Lbl
 			// 
-			this->SpecStrength->AutoSize = true;
-			this->SpecStrength->Location = System::Drawing::Point(47, 66);
-			this->SpecStrength->Name = L"SpecStrength";
-			this->SpecStrength->Size = System::Drawing::Size(92, 13);
-			this->SpecStrength->TabIndex = 9;
-			this->SpecStrength->Text = L"Specular Strength";
+			this->SpecStrength_Lbl->AutoSize = true;
+			this->SpecStrength_Lbl->Location = System::Drawing::Point(47, 66);
+			this->SpecStrength_Lbl->Name = L"SpecStrength_Lbl";
+			this->SpecStrength_Lbl->Size = System::Drawing::Size(92, 13);
+			this->SpecStrength_Lbl->TabIndex = 9;
+			this->SpecStrength_Lbl->Text = L"Specular Strength";
 			// 
-			// SpecColor
+			// SpecColor_Lbl
 			// 
-			this->SpecColor->AutoSize = true;
-			this->SpecColor->Location = System::Drawing::Point(50, 108);
-			this->SpecColor->Name = L"SpecColor";
-			this->SpecColor->Size = System::Drawing::Size(76, 13);
-			this->SpecColor->TabIndex = 10;
-			this->SpecColor->Text = L"Specular Color";
+			this->SpecColor_Lbl->AutoSize = true;
+			this->SpecColor_Lbl->Location = System::Drawing::Point(50, 108);
+			this->SpecColor_Lbl->Name = L"SpecColor_Lbl";
+			this->SpecColor_Lbl->Size = System::Drawing::Size(76, 13);
+			this->SpecColor_Lbl->TabIndex = 10;
+			this->SpecColor_Lbl->Text = L"Specular Color";
 			// 
 			// RLabel
 			// 
@@ -241,74 +270,74 @@ namespace OpenGL {
 			this->BLabel->TabIndex = 13;
 			this->BLabel->Text = L"B";
 			// 
-			// label6
+			// specStrength_LblVal
 			// 
-			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(432, 66);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(13, 13);
-			this->label6->TabIndex = 14;
-			this->label6->Text = L"4";
+			this->specStrength_LblVal->AutoSize = true;
+			this->specStrength_LblVal->Location = System::Drawing::Point(432, 66);
+			this->specStrength_LblVal->Name = L"specStrength_LblVal";
+			this->specStrength_LblVal->Size = System::Drawing::Size(13, 13);
+			this->specStrength_LblVal->TabIndex = 14;
+			this->specStrength_LblVal->Text = L"4";
 			// 
-			// label7
+			// r_LblVal
 			// 
-			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(432, 108);
-			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(28, 13);
-			this->label7->TabIndex = 15;
-			this->label7->Text = L"1.00";
+			this->r_LblVal->AutoSize = true;
+			this->r_LblVal->Location = System::Drawing::Point(432, 108);
+			this->r_LblVal->Name = L"r_LblVal";
+			this->r_LblVal->Size = System::Drawing::Size(28, 13);
+			this->r_LblVal->TabIndex = 15;
+			this->r_LblVal->Text = L"1.00";
 			// 
-			// label8
+			// g_LblVal
 			// 
-			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(432, 151);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(28, 13);
-			this->label8->TabIndex = 16;
-			this->label8->Text = L"1.00";
+			this->g_LblVal->AutoSize = true;
+			this->g_LblVal->Location = System::Drawing::Point(432, 151);
+			this->g_LblVal->Name = L"g_LblVal";
+			this->g_LblVal->Size = System::Drawing::Size(28, 13);
+			this->g_LblVal->TabIndex = 16;
+			this->g_LblVal->Text = L"1.00";
 			// 
-			// label9
+			// b_LblVal
 			// 
-			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(432, 202);
-			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(28, 13);
-			this->label9->TabIndex = 17;
-			this->label9->Text = L"1.00";
+			this->b_LblVal->AutoSize = true;
+			this->b_LblVal->Location = System::Drawing::Point(432, 202);
+			this->b_LblVal->Name = L"b_LblVal";
+			this->b_LblVal->Size = System::Drawing::Size(28, 13);
+			this->b_LblVal->TabIndex = 17;
+			this->b_LblVal->Text = L"1.00";
 			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(485, 359);
-			this->Controls->Add(this->label9);
-			this->Controls->Add(this->label8);
-			this->Controls->Add(this->label7);
-			this->Controls->Add(this->label6);
+			this->Controls->Add(this->b_LblVal);
+			this->Controls->Add(this->g_LblVal);
+			this->Controls->Add(this->r_LblVal);
+			this->Controls->Add(this->specStrength_LblVal);
 			this->Controls->Add(this->BLabel);
 			this->Controls->Add(this->GLabel);
 			this->Controls->Add(this->RLabel);
-			this->Controls->Add(this->SpecColor);
-			this->Controls->Add(this->SpecStrength);
-			this->Controls->Add(this->button2);
-			this->Controls->Add(this->button1);
-			this->Controls->Add(this->trackBar4);
-			this->Controls->Add(this->trackBar3);
-			this->Controls->Add(this->trackBar2);
-			this->Controls->Add(this->trackBar1);
-			this->Controls->Add(this->radioButton3);
-			this->Controls->Add(this->radioButton2);
-			this->Controls->Add(this->radioButton1);
+			this->Controls->Add(this->SpecColor_Lbl);
+			this->Controls->Add(this->SpecStrength_Lbl);
+			this->Controls->Add(this->resetTeapotPosBtn);
+			this->Controls->Add(this->resetLightPosBtn);
+			this->Controls->Add(this->trackBar_B_Component);
+			this->Controls->Add(this->trackBar_G_Component);
+			this->Controls->Add(this->trackBar_R_Component);
+			this->Controls->Add(this->trackBar_SpecStrength_Component);
+			this->Controls->Add(this->moveCubesToSphereBtn);
+			this->Controls->Add(this->colorByPositionBtn);
+			this->Controls->Add(this->moveLightBtn);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"ToolWindow";
 			this->Text = L"ToolWindow";
 			this->TopMost = true;
 			this->Load += gcnew System::EventHandler(this, &ToolWindow::ToolWindow_Load);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar3))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar4))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_SpecStrength_Component))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_R_Component))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_G_Component))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_B_Component))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -317,5 +346,58 @@ namespace OpenGL {
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 
+	private: System::Void moveLightBtn_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		moveLight_Channel = moveLightBtn->Checked;
+	}
+	private: System::Void resetLightPosBtn_Click(System::Object^ sender, System::EventArgs^ e) {
+		resetLight_Btn = true;
+	}
+
+	private: System::Void trackBar_SpecStrength_Component_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		trackBar_SpecStrength = trackBar_SpecStrength_Component->Value;
+		specStrength_LblVal->Text = (trackBar_SpecStrength).ToString();
+	}
+
+	private: System::Void trackBar_R_Component_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		trackBar_R = trackBar_R_Component->Value / 100.0f;
+		r_LblVal->Text = (trackBar_R).ToString();
+	}
+
+	private: System::Void trackBar_G_Component_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		trackBar_G = trackBar_G_Component->Value / 100.0f;
+		g_LblVal->Text = (trackBar_G).ToString();
+	}
+
+	private: System::Void trackBar_B_Component_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		trackBar_B = trackBar_B_Component->Value / 100.0f;
+		b_LblVal->Text = (trackBar_B).ToString();
+	}
+
+	private: System::Void colorByPositionBtn_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		colorByPosition_Channel = colorByPositionBtn->Checked;
+	}
+
+	private: System::Void resetTeapotPosBtn_Click(System::Object^ sender, System::EventArgs^ e) {
+		resetTeapot_Btn = true;
+	}
+
+	private: System::Void moveCubesToSphereBtn_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		moveCubesToShpere_Channel = moveCubesToSphereBtn->Checked;
+
+		trackBar_SpecStrength = 4.0f;
+		specStrength_LblVal->Text = (trackBar_SpecStrength).ToString();
+
+		trackBar_R_Component->Value = 100.0f;
+		trackBar_R = trackBar_R_Component->Value / 100.0f;
+		r_LblVal->Text = (trackBar_R).ToString();
+
+		trackBar_G_Component->Value = 100.0f;
+		trackBar_G = trackBar_G_Component->Value / 100.0f;
+		g_LblVal->Text = (trackBar_G).ToString();
+
+		trackBar_B_Component->Value = 100.0f;
+		trackBar_B = trackBar_B_Component->Value / 100.0f;
+		b_LblVal->Text = (trackBar_B).ToString();
+	}
 };
 }
