@@ -18,12 +18,19 @@ public:
 	void Initialize();
 	void RunGame();
 
+	// Accessors
+	glm::vec3 GetSpherePos() { return m_spherePos; } 
+	glm::vec3 GetTeapotPos() { return m_teapotPos; }
+
 private:
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
 	Shader m_shaderFont;
+	Shader m_shaderSimple;
 	Camera m_camera;
-	vector<Mesh> m_meshes;
+	vector<Mesh> m_meshBoxes;
+	glm::vec3 m_spherePos;
+	glm::vec3 m_teapotPos;
 };
 #endif // !GAME_CONTROLLER_H
 

@@ -26,6 +26,7 @@ public:
 	void Cleanup();
 	void CalculateTransform();
 	void Render(glm::mat4 _wvp);	//Technically _wvp is only _vp since world matrix exists in this contextand mesh has its own
+	void SetShader(Shader* _shader);
 
 	//Members
 	static vector<Mesh> Lights;

@@ -1,18 +1,19 @@
-#version 330 // OpenGL version 3.3 (minimum requirement)
+#version 330 core
 
-in vec3 vertices; // Value sent from application to this attribute
-in vec3 colors; // Input color from application
-in vec2 texCoords;
+layout(location = 0) in vec3 inPosition;  // Input vertex position
 
-uniform mat4 WVP;
+out vec3 retFragPos;  // Output world position to be interpolated in the fragment shader
 
-out vec3 retColor; // Output a color to the fragment shader
-out vec2 retTexCoord;
+uniform mat4 model;  // Model matrix to transform vertices
+uniform mat4 view;   // View matrix
+uniform mat4 projection;  // Projection matrix
 
 void main()
 {
-	// gl_Position = vec4(vertices, 1.0); // Pass-through shader, pass positions to next shader
-	gl_Position = WVP * vec4(vertices, 1.0); // Transform the model to screen projection
-	retColor = colors;
-	retTexCoord = texCoords;
+    // Transform the vertex position to screen coordinates
+    gl_Position = projection * view * model * vec4(inPosition, 1.0);
+    
+    // Pass the world position to the fragment shader
+    retFragPos = vec3(model * vec4(inPosition, 1.0));
 }
+
