@@ -22,8 +22,7 @@ void GameController::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+
 	srand((unsigned int )time(0));
 
 	// Create a default perspectice camera
@@ -61,16 +60,16 @@ void GameController::RunGame()
 	m_meshes.push_back(box);
 
 	Mesh wall = Mesh();
-	wall.Create(&m_shaderDiffuse, "../Assets/Models/BrickWall.obj");
+	wall.Create(&m_shaderDiffuse, "../Assets/Models/Wall.obj");
 	wall.SetCameraPosition(m_camera.GetPosition());
-	wall.SetScale({ 0.5f, 0.5f, 0.5f });
+	wall.SetScale({ 0.1f, 0.1f, 0.1f });
 	wall.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshes.push_back(wall);
 
 #pragma endregion CreateMeshes
 
 	Fonts f = Fonts();
-	f.Create(&m_shaderFont, "arial.ttf", 40);
+	f.Create(&m_shaderFont, "arial.ttf", 100);
 
 #pragma region Render
 	do
