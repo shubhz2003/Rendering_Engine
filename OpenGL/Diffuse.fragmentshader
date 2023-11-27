@@ -4,7 +4,7 @@ in vec3 retNormal;
 in vec2 retTexCoord;
 in vec3 retFragPos;
 in vec3 retViewDirection;
-in mat4 retWorld;
+in mat3 retTBN;
 
 out vec4 FragColor;
 
@@ -49,7 +49,7 @@ void main()
 		{
 			normal = texture(material.normalTexture, retTexCoord).rgb;
 			normal = normal * 2.0f - 1.0f;
-			normal = normalize(mat3(retWorld) * normal);
+			normal = normalize(retTBN * normal);
 		}
 		float lambertianStrength = dot(lightDir, retNormal); // Add lambertian Lighting
 		vec3 refl = reflect(-lightDir, retNormal); // Reflect wants lightDir to be from pizel to source hence -ve

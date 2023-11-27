@@ -15,6 +15,8 @@ public:
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
 	GLuint GetAttrNormals() { return m_attrNormals; }
+	GLuint GetattrTangents() { return m_attrTangents; }
+	GLuint GetattrBitangents() { return m_attrBitangents; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
@@ -39,6 +41,8 @@ private:
 	GLuint m_attrVertices; // Handle for the attribute vertex buffer
 	GLuint m_attrColors; // Handle for colors
 	GLuint m_attrNormals; 
+	GLuint m_attrTangents;
+	GLuint m_attrBitangents;
 	GLuint m_attrTexCoords; // Handle for Texture coordinates
 	GLuint m_attrWVP;
 	GLint m_result;

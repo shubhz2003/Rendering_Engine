@@ -37,8 +37,6 @@ void GameController::RunGame()
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
-	m_shaderSkybox = Shader();
-	m_shaderSkybox.LoadShaders("Skybox.vertexshader", "Skybox.fragmentshader");
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 #pragma endregion SetupShaders
@@ -52,19 +50,12 @@ void GameController::RunGame()
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
 	Mesh::Lights.push_back(m);
 
-	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
-	box.SetCameraPosition(m_camera.GetPosition());
-	box.SetScale({ 0.25f, 0.25f, 0.25f });
-	box.SetPosition({ 0.0f, 1.0f, 1.0f });
-	m_meshes.push_back(box);
-
-	Mesh wall = Mesh();
-	wall.Create(&m_shaderDiffuse, "../Assets/Models/Wall.obj");
-	wall.SetCameraPosition(m_camera.GetPosition());
-	wall.SetScale({ 0.1f, 0.1f, 0.1f });
-	wall.SetPosition({ 0.0f, 0.0f, 0.0f });
-	m_meshes.push_back(wall);
+	Mesh fighter = Mesh();
+	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
+	fighter.SetCameraPosition(m_camera.GetPosition());
+	fighter.SetScale({ 0.002f, 0.002f, 0.002f });
+	fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
+	m_meshes.push_back(fighter);
 
 #pragma endregion CreateMeshes
 
