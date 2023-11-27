@@ -46,9 +46,9 @@ void GameController::RunGame()
 	// Create Meshes
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
-	m.SetPosition({ 0.0f, 0.8f, 1.0f });
+	m.SetPosition({ 0.0f, 0.0f, 1.0f });
 	m.SetColor({ 1.0f, 1.0f, 1.0f });
-	m.SetScale({ 0.015f, 0.015f, 0.015f });
+	m.SetScale({ 0.01f, 0.01f,0.01f });
 	Mesh::Lights.push_back(m);
 
 	Mesh box = Mesh();
@@ -80,14 +80,6 @@ void GameController::RunGame()
 			lastTime += 1.0;
 		}
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
-
-		for (unsigned int count = 0; count < m_meshes.size(); count++)
-		{
-			for (int x = 0; x < 1000; x++)
-			{
-				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
-			}	
-		}
 
 		for (unsigned int count = 0; count < m_meshes.size(); count++)
 		{

@@ -23,7 +23,7 @@ public:
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
 
 	// Methods
-	void Create(Shader* _shader, string _file);
+	void Create(Shader* _shader, string _file, int _instanceCount = 1); // instance count is a optional paramenter
 	void Cleanup();
 	void CalculateTransform();
 	void Render(glm::mat4 _wvp);	//Technically _wvp is only _vp since world matrix exists in this contextand mesh has its own
@@ -45,9 +45,14 @@ private:
 	Texture m_textureNormal;
 	GLuint m_vertexBuffer; // GPU buffer
 	GLuint m_indexBuffer; // GPU buffer
+	GLuint m_instanceBuffer; // GPU buffer
 	std::vector<GLfloat> m_vertexData; // Store vertex data in RAM
 	std::vector<GLubyte> m_indexData; // Store index data in RAM
+	std::vector < GLfloat> m_instanceData; // Store index data in RAM
 	bool m_enableNormalMap;
+	int m_instanceCount;
+	bool m_enableInstancing;
+	int m_elementSize;
 
 	// Transform
 	glm::vec3 m_position;

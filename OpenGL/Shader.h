@@ -15,9 +15,10 @@ public:
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
 	GLuint GetAttrNormals() { return m_attrNormals; }
-	GLuint GetattrTangents() { return m_attrTangents; }
-	GLuint GetattrBitangents() { return m_attrBitangents; }
+	GLuint GetAttrTangents() { return m_attrTangents; }
+	GLuint GetAttrBitangents() { return m_attrBitangents; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
+	GLuint GetAttrInstanceMatrix() { return m_attrInstanceMatrix; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
@@ -44,6 +45,7 @@ private:
 	GLuint m_attrTangents;
 	GLuint m_attrBitangents;
 	GLuint m_attrTexCoords; // Handle for Texture coordinates
+	GLuint m_attrInstanceMatrix;
 	GLuint m_attrWVP;
 	GLint m_result;
 	int m_infoLogLength;
