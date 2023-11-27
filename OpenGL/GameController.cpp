@@ -45,17 +45,17 @@ void GameController::RunGame()
 	// Create Meshes
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
-	m.SetPosition({ 1.0f, 0.0f, 0.0f });
+	m.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m.SetColor({ 1.0f, 1.0f, 1.0f });
-	m.SetScale({ 0.005f, 0.005f, 0.005f });
+	m.SetScale({ 0.015f, 0.015f, 0.015f });
 	Mesh::Lights.push_back(m);
 
-	Mesh fighter = Mesh();
-	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj");
-	fighter.SetCameraPosition(m_camera.GetPosition());
-	fighter.SetScale({ 0.002f, 0.002f, 0.002f });
-	fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
-	m_meshes.push_back(fighter);
+	Mesh box = Mesh();
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
+	box.SetCameraPosition(m_camera.GetPosition());
+	box.SetScale({ 0.05f, 0.05f, 0.05f });
+	box.SetPosition({ 1.0f, 0.0f, 0.0f });
+	m_meshes.push_back(box);
 
 #pragma endregion CreateMeshes
 
@@ -63,10 +63,31 @@ void GameController::RunGame()
 	f.Create(&m_shaderFont, "arial.ttf", 100);
 
 #pragma region Render
+	double lastTime = glfwGetTime();
+	int fps = 0;
+	string fpsS = "0";
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Clear the screen
 		
+		double currentTime = glfwGetTime();
+		fps++;
+		if (currentTime - lastTime >= 1.0)
+		{
+			fpsS = "FPS: " + to_string(fps);
+			fps = 0;
+			lastTime += 1.0;
+		}
+		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
+
+		for (unsigned int count = 0; count < m_meshes.size(); count++)
+		{
+			for (int x = 0; x < 1000; x++)
+			{
+				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			}	
+		}
+
 		for (unsigned int count = 0; count < m_meshes.size(); count++)
 		{
 			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
@@ -77,7 +98,6 @@ void GameController::RunGame()
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 
-		f.RenderText("Testing text", 10, 500, 0.5f, { 1.0f, 1.0f, 0.0f });
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap front and back buffers
 		glfwPollEvents();
 
