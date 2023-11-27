@@ -22,9 +22,10 @@ void GameController::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	glEnable(GL_CULL_FACE);
 	srand((unsigned int )time(0));
-
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 	// Create a default perspectice camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
@@ -45,16 +46,16 @@ void GameController::RunGame()
 	// Create Meshes
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
-	m.SetPosition({ 0.0f, 0.0f, 0.0f });
+	m.SetPosition({ 0.0f, 0.8f, 1.0f });
 	m.SetColor({ 1.0f, 1.0f, 1.0f });
 	m.SetScale({ 0.015f, 0.015f, 0.015f });
 	Mesh::Lights.push_back(m);
 
 	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj");
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 1000);
 	box.SetCameraPosition(m_camera.GetPosition());
 	box.SetScale({ 0.05f, 0.05f, 0.05f });
-	box.SetPosition({ 1.0f, 0.0f, 0.0f });
+	box.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshes.push_back(box);
 
 #pragma endregion CreateMeshes
