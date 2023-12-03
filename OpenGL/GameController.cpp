@@ -52,9 +52,9 @@ void GameController::RunGame()
 	Mesh::Lights.push_back(m);
 
 	Mesh box = Mesh();
-	box.Create(&m_shaderDiffuse, "../Assets/Models/Cube.obj", 1000);
+	box.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.obj", 1);
 	box.SetCameraPosition(m_camera.GetPosition());
-	box.SetScale({ 0.05f, 0.05f, 0.05f });
+	box.SetScale({ 0.005f, 0.005f, 0.005f });
 	box.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshes.push_back(box);
 
