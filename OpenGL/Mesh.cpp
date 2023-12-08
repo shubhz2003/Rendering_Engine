@@ -1,6 +1,9 @@
 #include "Mesh.h"
 #include "Shader.h"
-#include "OBJ_Loader.h"
+#include "StandardIncludes.h"
+#include <msclr\marshal_cppstd.h>
+#include "ASEMesh.h"
+using namespace ASEMeshes;
 
 vector<Mesh> Mesh::Lights;
 
@@ -13,11 +16,11 @@ Mesh::Mesh()
 	m_textureNormal = { };
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
-	m_instanceBuffer = 0;
 	m_position = { 0, 0, 0 };
 	m_rotation = { 0, 0, 0 };
 	m_scale = { 1, 1, 1 };
 	m_world = glm::mat4();
+	m_instanceBuffer = 0;
 	m_instanceCount = 1;
 	m_enableInstancing = false;
 	m_elementSize = 0;
@@ -38,6 +41,18 @@ string Mesh::RemoveFolder(string _map)
 	return _map;
 }
 
+bool Mesh::EndsWith(std::string const& _fullString, std::string const& _ending)
+{
+	if (_fullString.length() >= _ending.length())
+	{
+		return (0 == _fullString.compare(_fullString.length() - _ending.length(), _ending.length(), _ending));
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 {
 
@@ -49,60 +64,63 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 	}
 
 #pragma region LoadMesh
-	objl::Loader Loader; //Initialize Loader
 
-	M_ASSERT(Loader.LoadFile(_file) == true, "Failed to load mesh."); //Load .obj file
-
-	m_textureDiffuse = Texture();
-	m_textureDiffuse.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Kd));
-
-	m_textureSpecular = Texture();
-	if (Loader.LoadedMaterials[0].map_Ks != "")
+	if (EndsWith(_file, ".ase"))
 	{
-		m_textureSpecular.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Ks));
-	}
+		ASEMesh^ meshData = gcnew ASEMesh(_file.c_str());
+		meshData->ParseASEFile();
+		MeshInfo^ m = meshData->GeoObjects[0]->MeshI;
+		Material^ mat = meshData->Materials[meshData->GeoObjects[0]->MaterialID];
 
-	m_textureNormal = Texture();
-	if (Loader.LoadedMaterials[0].map_bump != "")
-	{
-		m_textureNormal.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_bump));
-		m_enableNormalMap = true;
-	}
-
-	for (unsigned int i = 0; i < Loader.LoadedMeshes.size(); i++)
-	{
-		objl::Mesh curMesh = Loader.LoadedMeshes[i];
 		vector<objl::Vector3> tangents;
 		vector<objl::Vector3> bitangents;
 		vector<objl::Vertex> triangle;
 		objl::Vector3 tangent;
 		objl::Vector3 bitangent;
-		for (unsigned int j = 0; j < curMesh.Vertices.size(); j += 3)
+		int vCount = 0;
+		for (int count = 0; count < m->NumFaces; count++)
 		{
+			Vec3^ tF = m->TexFaces[count];
+			Vec3^ f = m->Faces[count];
 			triangle.clear();
-			triangle.push_back(curMesh.Vertices[j]);
-			triangle.push_back(curMesh.Vertices[j + 1]);
-			triangle.push_back(curMesh.Vertices[j + 2]);
+
+			objl::Vertex vert = objl::Vertex();
+			vert.Position = objl::Vector3(m->Vertices[(int)f->X]->X, m->Vertices[(int)f->X]->Y, m->Vertices[(int)f->X]->Z);
+			vert.Normal = objl::Vector3(m->VertexNormals[vCount]->X, m->VertexNormals[vCount]->Y, m->VertexNormals[vCount]->Z);
+			vert.TextureCoordinate = objl::Vector2(m->TexVertices[(int)tF->X]->X, m->TexVertices[(int)tF->X]->Y);
+			triangle.push_back(vert);
+			vCount++;
+
+			vert = objl::Vertex();
+			vert.Position = objl::Vector3(m->Vertices[(int)f->Y]->X, m->Vertices[(int)f->Y]->Y, m->Vertices[(int)f->Y]->Z);
+			vert.Normal = objl::Vector3(m->VertexNormals[vCount]->X, m->VertexNormals[vCount]->Y, m->VertexNormals[vCount]->Z);
+			vert.TextureCoordinate = objl::Vector2(m->TexVertices[(int)tF->Y]->X, m->TexVertices[(int)tF->Y]->Y);
+			triangle.push_back(vert);
+			vCount++;
+
+			vert = objl::Vertex();
+			vert.Position = objl::Vector3(m->Vertices[(int)f->Z]->X, m->Vertices[(int)f->Z]->Y, m->Vertices[(int)f->Z]->Z);
+			vert.Normal = objl::Vector3(m->VertexNormals[vCount]->X, m->VertexNormals[vCount]->Y, m->VertexNormals[vCount]->Z);
+			vert.TextureCoordinate = objl::Vector2(m->TexVertices[(int)tF->Z]->X, m->TexVertices[(int)tF->Z]->Y);
+			triangle.push_back(vert);
+			vCount++;
+
 			CalculateTangents(triangle, tangent, bitangent);
 			tangents.push_back(tangent);
 			bitangents.push_back(bitangent);
-		}
 
-
-		for (unsigned int j = 0; j < curMesh.Vertices.size(); j++)
-		{
-			m_vertexData.push_back(curMesh.Vertices[j].Position.X);
-			m_vertexData.push_back(curMesh.Vertices[j].Position.Y);
-			m_vertexData.push_back(curMesh.Vertices[j].Position.Z);
-			m_vertexData.push_back(curMesh.Vertices[j].Normal.X);
-			m_vertexData.push_back(curMesh.Vertices[j].Normal.Y);
-			m_vertexData.push_back(curMesh.Vertices[j].Normal.Z);
-			m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.X);
-			m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.Y);
-
-			if (Loader.LoadedMaterials[0].map_bump != "")
+			for (int c = 0; c < 3; c++)
 			{
-				int index = j / 3;
+				m_vertexData.push_back(triangle[c].Position.X);
+				m_vertexData.push_back(triangle[c].Position.Y);
+				m_vertexData.push_back(triangle[c].Position.Z);
+				m_vertexData.push_back(triangle[c].Normal.X);
+				m_vertexData.push_back(triangle[c].Normal.Y);
+				m_vertexData.push_back(triangle[c].Normal.Z);
+				m_vertexData.push_back(triangle[c].TextureCoordinate.X);
+				m_vertexData.push_back(triangle[c].TextureCoordinate.Y);
+
+				int index = (vCount / 3) - 1;
 				m_vertexData.push_back(tangents[index].X);
 				m_vertexData.push_back(tangents[index].Y);
 				m_vertexData.push_back(tangents[index].Z);
@@ -112,7 +130,104 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 
 			}
 		}
+		m_textureDiffuse = Texture();
+		if (mat->Maps[0]->Name == "DIFFUSE")
+		{
+			string fn = msclr::interop::marshal_as<std::string>(mat->Maps[0]->TextureFileName);
+			m_textureDiffuse.LoadTexture("../Assets/Textures/" + RemoveFolder(fn));
+
+		}
+
+		m_textureSpecular = Texture();
+		if (mat->Maps[1]->Name == "SPECULAR")
+		{
+			string fn = msclr::interop::marshal_as<std::string>(mat->Maps[1]->TextureFileName);
+			m_textureSpecular.LoadTexture("../Assets/Textures/" + RemoveFolder(fn));
+		}
+
+		m_textureNormal = Texture();
+		if (mat->Maps[1]->Name == "BUMP")
+		{
+			string fn = msclr::interop::marshal_as<std::string>(mat->Maps[1]->TextureFileName);
+			m_textureNormal.LoadTexture("../Assets/Textures/" + RemoveFolder(fn));
+			m_enableNormalMap = true;
+		}
+		else if (mat->Maps[2]->Name == "BUMP")
+		{
+			string fn = msclr::interop::marshal_as<std::string>(mat->Maps[2]->TextureFileName);
+			m_textureNormal.LoadTexture("../Assets/Textures/" + RemoveFolder(fn));
+			m_enableNormalMap = true;
+		}
 	}
+	else
+	{
+		objl::Loader Loader; //Initialize Loader
+
+		M_ASSERT(Loader.LoadFile(_file) == true, "Failed to load mesh."); //Load .obj file
+
+		m_textureDiffuse = Texture();
+		m_textureDiffuse.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Kd));
+
+		m_textureSpecular = Texture();
+		if (Loader.LoadedMaterials[0].map_Ks != "")
+		{
+			m_textureSpecular.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Ks));
+		}
+
+		m_textureNormal = Texture();
+		if (Loader.LoadedMaterials[0].map_bump != "")
+		{
+			m_textureNormal.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_bump));
+			m_enableNormalMap = true;
+		}
+
+
+		for (unsigned int i = 0; i < Loader.LoadedMeshes.size(); i++)
+		{
+			objl::Mesh curMesh = Loader.LoadedMeshes[i];
+			vector<objl::Vector3> tangents;
+			vector<objl::Vector3> bitangents;
+			vector<objl::Vertex> triangle;
+			objl::Vector3 tangent;
+			objl::Vector3 bitangent;
+			for (unsigned int j = 0; j < curMesh.Vertices.size(); j += 3)
+			{
+				triangle.clear();
+				triangle.push_back(curMesh.Vertices[j]);
+				triangle.push_back(curMesh.Vertices[j + 1]);
+				triangle.push_back(curMesh.Vertices[j + 2]);
+				CalculateTangents(triangle, tangent, bitangent);
+				tangents.push_back(tangent);
+				bitangents.push_back(bitangent);
+			}
+
+
+			for (unsigned int j = 0; j < curMesh.Vertices.size(); j++)
+			{
+				m_vertexData.push_back(curMesh.Vertices[j].Position.X);
+				m_vertexData.push_back(curMesh.Vertices[j].Position.Y);
+				m_vertexData.push_back(curMesh.Vertices[j].Position.Z);
+				m_vertexData.push_back(curMesh.Vertices[j].Normal.X);
+				m_vertexData.push_back(curMesh.Vertices[j].Normal.Y);
+				m_vertexData.push_back(curMesh.Vertices[j].Normal.Z);
+				m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.X);
+				m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.Y);
+
+				if (Loader.LoadedMaterials[0].map_bump != "")
+				{
+					int index = j / 3;
+					m_vertexData.push_back(tangents[index].X);
+					m_vertexData.push_back(tangents[index].Y);
+					m_vertexData.push_back(tangents[index].Z);
+					m_vertexData.push_back(bitangents[index].X);
+					m_vertexData.push_back(bitangents[index].Y);
+					m_vertexData.push_back(bitangents[index].Z);
+
+				}
+			}
+		}
+	}
+
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -142,6 +257,9 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		glBufferData(GL_ARRAY_BUFFER, m_instanceCount * sizeof(glm::mat4), m_instanceData.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
+
+
+
 
 }
 
@@ -296,14 +414,14 @@ void Mesh::BindAttributes()
 void Mesh::CalculateTransform()
 {
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
-	m_world = glm::rotate(m_world, glm::radians(m_rotation.x), glm::vec3(1, 0, 0));
+	m_world = glm::rotate(m_world, glm::radians(m_rotation.x), glm::vec3(0, 1, 0));
 	m_world = glm::scale(m_world, m_scale);
 }
 
-void Mesh::SetShaderVariables(glm::mat4 _wpv)
+void Mesh::SetShaderVariables(glm::mat4 _pv)
 {
 	m_shader->SetMat4("World", m_world);
-	m_shader->SetMat4("WVP", _wpv * m_world);
+	m_shader->SetMat4("WVP", _pv * m_world);
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 	m_shader->SetInt("EnableNormalMap", m_enableNormalMap);
 	m_shader->SetInt("EnableInstancing", m_enableInstancing);
@@ -333,13 +451,13 @@ void Mesh::SetShaderVariables(glm::mat4 _wpv)
 	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_textureNormal.GetTexture());
 }
 
-void Mesh::Render(glm::mat4 _wpv)
+void Mesh::Render(glm::mat4 _pv)
 {
 	glUseProgram(m_shader->GetProgramID()); // Use our shader
-	m_rotation.x += 0.1f;
+	m_rotation.x += 0.001f;
 
 	CalculateTransform();
-	SetShaderVariables(_wpv);
+	SetShaderVariables(_pv);
 	BindAttributes();
 
 	if (m_enableInstancing)

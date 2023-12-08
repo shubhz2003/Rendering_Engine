@@ -30,7 +30,7 @@
 #include "Singleton.h"
 #include "Resolution.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
+//#define GLM_ENABLE_EXPERIMENTAL
 
 using namespace std;
 

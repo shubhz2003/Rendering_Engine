@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{6456c373-8678-42cb-9c82-e1b3503a1866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\AseMeshes">
+      <UniqueIdentifier>{30229703-93d0-4d2e-af30-d328bf16086e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,6 +52,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PostProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ASEMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="PostProcessor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ASEMesh.h">
+      <Filter>Header Files\AseMeshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
