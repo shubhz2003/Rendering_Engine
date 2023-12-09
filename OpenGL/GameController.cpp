@@ -34,6 +34,10 @@ void GameController::Initialize()
 
 void GameController::RunGame()
 {
+	// Show the C++/CLI window
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	window->Show();
+
 #pragma region SetupShaders
 	// Create and compile our GLSL program from the shaders
 	m_shaderColor = Shader(); // value object. It's cretaed on stack. No need for 'new'
@@ -74,6 +78,8 @@ void GameController::RunGame()
 	string fpsS = "0";
 	do
 	{
+		System::Windows::Forms::Application::DoEvents(); // Handle C++/CLI Events
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
 
 		//m_postProcessor.Start();
