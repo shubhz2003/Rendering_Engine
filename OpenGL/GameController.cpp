@@ -56,7 +56,7 @@ void GameController::RunGame()
 	Mesh::Lights.push_back(m);
 
 	Mesh fighter = Mesh();
-	fighter.Create(&m_shaderDiffuse, "../Assets/Models/FighterTest.ase");
+	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.ase");
 	fighter.SetCameraPosition(m_camera.GetPosition());
 	fighter.SetScale({ 0.0008f, 0.0008f, 0.0008f });
 	fighter.SetPosition({ 0.0f, 0.0f, -1.0f });
