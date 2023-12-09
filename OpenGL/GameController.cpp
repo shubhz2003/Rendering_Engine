@@ -49,7 +49,7 @@ void GameController::RunGame()
 #pragma region CreateMeshes
 	//Create meshes
 	Mesh m = Mesh();
-	m.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
+	m.Create(&m_shaderColor, "../Assets/Models/Sphere.obj");
 	m.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m.SetColor({ 1.0f, 1.0f, 1.0f });
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
@@ -58,7 +58,7 @@ void GameController::RunGame()
 	Mesh fighter = Mesh();
 	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.ase");
 	fighter.SetCameraPosition(m_camera.GetPosition());
-	fighter.SetScale({ 0.0008f, 0.0008f, 0.0008f });
+	fighter.SetScale({ 0.001f, 0.001f, 0.001f });
 	fighter.SetPosition({ 0.0f, 0.0f, -1.0f });
 	m_meshes.push_back(fighter);
 
