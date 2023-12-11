@@ -8,8 +8,29 @@ GameController::GameController()
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
 	m_shaderPost = { };
+	m_shaderFont = { };
 	m_camera = { };
 	m_meshes.clear();
+	m_spherePos = { 0.0f, 0.0f, 0.0f };
+}
+
+double xPos = 0.0f;
+double yPos = 0.0f;
+glm::vec3 targetPos;
+float speedFactor;
+static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		glfwGetCursorPos(window, &xPos, &yPos);
+
+		float x = (xPos / width) * 2.0f - 1.0f;
+		float y = 1.0 - (yPos / height) * 2.0f;
+		targetPos = glm::vec3(x, y, 0.0f);
+	}
 }
 
 void GameController::Initialize()
@@ -30,6 +51,7 @@ void GameController::Initialize()
 	Resolution r = WindowController::GetInstance().GetResolution();
 	glViewport(0, 0, r.m_width, r.m_height);
 	m_camera = Camera(r);
+	glfwSetMouseButtonCallback(WindowController::GetInstance().GetWindow(), mouse_callback);
 }
 
 void GameController::RunGame()
@@ -54,7 +76,7 @@ void GameController::RunGame()
 	//Create meshes
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Sphere.obj");
-	m.SetPosition({ 0.0f, 0.0f, 0.0f });
+	m.SetPosition(m_spherePos);
 	m.SetColor({ 1.0f, 1.0f, 1.0f });
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
 	Mesh::Lights.push_back(m);
@@ -76,6 +98,9 @@ void GameController::RunGame()
 	double lastTime = glfwGetTime();
 	int fps = 0;
 	string fpsS = "0";
+
+	glm::vec3 spherePos = GetSpherePos();
+
 	do
 	{
 		System::Windows::Forms::Application::DoEvents(); // Handle C++/CLI Events
@@ -99,6 +124,34 @@ void GameController::RunGame()
 			fpsS = "FPS: " + to_string(fps);
 			fps = 0;
 			lastTime = currentTime;
+		}
+
+		if (OpenGL::ToolWindow::moveLight_Channel)
+		{
+			for (int count = 0; count < Mesh::Lights.size(); count++)
+			{
+				if (!OpenGL::ToolWindow::resetLight_Btn)
+				{
+					if (glm::length(targetPos - spherePos) > 0.01f)
+					{
+						glm::vec3 direction = glm::normalize(targetPos - spherePos);
+						speedFactor = glm::length(targetPos) / glm::length(glm::vec3((100.0f, 100.0f, 100.0f)));
+
+						spherePos += direction * speedFactor;
+						Mesh::Lights[count].SetPosition(spherePos);
+					}
+				}
+				else
+				{
+					Mesh::Lights[count].SetPosition({0.0f, 0.0f, 0.0f});
+					targetPos = { 0.0f, 0.0f, 0.0f };
+					spherePos = { 0.0f, 0.0f, 0.0f };
+					OpenGL::ToolWindow::resetLight_Btn = false;
+				}
+
+				Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			}
+			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//m_postProcessor.End();
 		f.RenderText(fpsS, 100, 100, 0.5, { 1.0, 1.0, 0.0 });

@@ -3,6 +3,7 @@
 #include "StandardIncludes.h"
 #include <msclr\marshal_cppstd.h>
 #include "ASEMesh.h"
+#include "ToolWindow.h"
 using namespace ASEMeshes;
 
 vector<Mesh> Mesh::Lights;
@@ -435,7 +436,9 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.1f, 0.1f, 0.1f });
 		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
-		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 3.0f, 3.0f, 3.0f });
+		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { (float)OpenGL::ToolWindow::trackBar_R / 3.0f,
+																			(float)OpenGL::ToolWindow::trackBar_G / 3.0f,
+																			(float)OpenGL::ToolWindow::trackBar_B / 3.0f });
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
@@ -445,7 +448,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 
 	//Configure material
-	m_shader->SetFloat("material.specularStrength", 8);
+	m_shader->SetFloat("material.specularStrength", (float)OpenGL::ToolWindow::trackBar_SpecStrength);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_textureDiffuse.GetTexture());
 	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_textureSpecular.GetTexture());
 	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_textureNormal.GetTexture());
