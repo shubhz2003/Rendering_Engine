@@ -22,18 +22,25 @@ public:
 
 	// Accessors
 	glm::vec3 GetSpherePos() { return m_spherePos; }
+	glm::vec3 GetFighterPos() { return m_fighterPos; }
 
 private:
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
 	Shader m_shaderFont;
 	Shader m_shaderPost;
+	Shader m_shaderSkybox;
 	Camera m_camera;
 	PostProcessor m_postProcessor;
 	vector<Mesh> m_meshes;
 	Skybox m_skybox;
 	GLuint vao;
 	glm::vec3 m_spherePos;
+	glm::vec3 m_fighterPos;
+	glm::vec3 m_fighterRotate;
+	glm::vec3 m_fighterScale;
+	float lastX, lastY;
+	bool leftButtonPressed;
 };
 #endif // !GAME_CONTROLLER_H
 

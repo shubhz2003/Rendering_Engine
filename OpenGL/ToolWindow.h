@@ -255,9 +255,9 @@ namespace OpenGL {
 			this->checkBoxTranslate->AutoSize = true;
 			this->checkBoxTranslate->Location = System::Drawing::Point(74, 289);
 			this->checkBoxTranslate->Name = L"checkBoxTranslate";
-			this->checkBoxTranslate->Size = System::Drawing::Size(73, 17);
+			this->checkBoxTranslate->Size = System::Drawing::Size(70, 17);
 			this->checkBoxTranslate->TabIndex = 6;
-			this->checkBoxTranslate->Text = L"Transform";
+			this->checkBoxTranslate->Text = L"Translate";
 			this->checkBoxTranslate->UseVisualStyleBackColor = true;
 			this->checkBoxTranslate->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::checkBoxTranslate_CheckedChanged);
 			// 

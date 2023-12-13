@@ -345,7 +345,7 @@ void Mesh::BindAttributes()
 	{
 		//4th attribute buffer : tangent
 		glEnableVertexAttribArray(m_shader->GetAttrTangents());
-		glVertexAttribPointer(m_shader->GetAttrTangents(), //The attribute we want to congigure
+		glVertexAttribPointer(m_shader->GetAttrTangents(), //The attribute we want to configure
 			3,             // size (3 components)
 			GL_FLOAT,      // type
 			GL_FALSE,      // normalized? 
@@ -354,7 +354,7 @@ void Mesh::BindAttributes()
 
 		//5th attribute buffer : bitangent
 		glEnableVertexAttribArray(m_shader->GetAttrBitangents());
-		glVertexAttribPointer(m_shader->GetAttrBitangents(), //The attribute we want to congigure
+		glVertexAttribPointer(m_shader->GetAttrBitangents(), //The attribute we want to configure
 			3,             // size (3 components)
 			GL_FLOAT,      // type
 			GL_FALSE,      // normalized? 
@@ -370,7 +370,7 @@ void Mesh::BindAttributes()
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_instanceBuffer); // Bind the vertex buffer
 
-		// Set attribute for instance matrix (4 times vec4
+		// Set attribute for instance matrix (4 times vec4 since its a 4x4 matrix)
 		glEnableVertexAttribArray(m_shader->GetAttrInstanceMatrix());
 		glVertexAttribPointer(m_shader->GetAttrInstanceMatrix(),
 			4,             // size (4 components)

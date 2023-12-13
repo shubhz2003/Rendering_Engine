@@ -9,9 +9,16 @@ GameController::GameController()
 	m_shaderDiffuse = { };
 	m_shaderPost = { };
 	m_shaderFont = { };
+	m_shaderSkybox = { };
 	m_camera = { };
 	m_meshes.clear();
 	m_spherePos = { 0.0f, 0.0f, 0.0f };
+	m_fighterPos = { 0.0f, 0.0f, -1.0f };
+	m_fighterScale = { 0.001f, 0.001f, 0.001f };
+	m_fighterRotate = { 0.0f, 0.0f, 0.0f };
+	leftButtonPressed = false;
+	lastX = 0.0f;
+	lastY = 0.0f;
 }
 
 double xPos = 0.0f;
@@ -66,6 +73,8 @@ void GameController::RunGame()
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
+	m_shaderSkybox = Shader();
+	m_shaderSkybox.LoadShaders("Skybox.vertexshader", "Skybox.fragmentshader");
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 	m_shaderPost = Shader();
@@ -84,23 +93,48 @@ void GameController::RunGame()
 	Mesh fighter = Mesh();
 	fighter.Create(&m_shaderDiffuse, "../Assets/Models/Fighter.ase");
 	fighter.SetCameraPosition(m_camera.GetPosition());
-	fighter.SetScale({ 0.001f, 0.001f, 0.001f });
-	fighter.SetPosition({ 0.0f, 0.0f, -1.0f });
-	m_meshes.push_back(fighter);
+	fighter.SetScale(m_fighterScale);
+	fighter.SetPosition(m_fighterPos);
+
+	Mesh astroid = Mesh();
+	astroid.Create(&m_shaderDiffuse, "../Assets/Models/Astroid.ase", 100);
+	astroid.SetCameraPosition(m_camera.GetPosition());
+	astroid.SetScale({ 0.05f, 0.05f, 0.05f });
+	astroid.SetPosition({ 0.0f, 0.0f, 0.0f });
+
+	Skybox skybox = Skybox();
+	skybox.Create(&m_shaderSkybox, "../Assets/Models/SkyBox.obj",
+		{	"../Assets/Textures/Skybox/right.jpg",
+			"../Assets/Textures/Skybox/left.jpg",
+			"../Assets/Textures/Skybox/top.jpg",
+			"../Assets/Textures/Skybox/bottom.jpg",
+			"../Assets/Textures/Skybox/front.jpg",
+			"../Assets/Textures/Skybox/back.jpg"
+		});
 
 #pragma endregion CreateMeshes
 
-	Fonts f = Fonts();
-	f.Create(&m_shaderFont, "arial.ttf", 100);
 	m_postProcessor = PostProcessor();
 	m_postProcessor.Create(&m_shaderPost);
 
+#pragma region FontSetup
+
+	Fonts f = Fonts();
+	string mousePosition = "";
+	f.Create(&m_shaderFont, "arial.ttf", 100);
+
+	Fonts fpsFont = Fonts();
 	double lastTime = glfwGetTime();
 	int fps = 0;
 	string fpsS = "0";
+	fpsFont.Create(&m_shaderFont, "arial.ttf", 100);
+
+#pragma endregion FontSetup
 
 	glm::vec3 spherePos = GetSpherePos();
+	glm::vec3 fighterPos = GetFighterPos();
 
+#pragma region Render
 	do
 	{
 		System::Windows::Forms::Application::DoEvents(); // Handle C++/CLI Events
@@ -153,8 +187,117 @@ void GameController::RunGame()
 			}
 			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+
+		else if (OpenGL::ToolWindow::transform_Channel)
+		{
+			m_camera.SetPosition();
+
+			std::cout << "Camera: " << glm::to_string(m_camera.GetPosition()) << std::endl;
+
+			fighter.SetRotation(m_fighterRotate);
+
+			for (int count = 0; count < Mesh::Lights.size(); count++)
+			{
+				Mesh::Lights[count].SetPosition({ 0.0f, 0.0f, 2.0f });
+			}
+
+
+			if (OpenGL::ToolWindow::RenderTranslate_Channel)
+			{
+				if (leftButtonPressed)
+				{
+					if (glm::length(targetPos - m_fighterPos) > 0.1)
+					{
+						glm::vec3 direction = glm::normalize(targetPos - m_fighterPos);
+						speedFactor = glm::length(targetPos) / glm::length(glm::vec3(100.0f, 100.0f, 100.0f));
+
+						m_fighterPos += direction * speedFactor;
+						fighter.SetPosition(m_fighterPos);
+					}
+				}
+			}
+			if (OpenGL::ToolWindow::RenderRotate_Channel)
+			{
+				double mouseX, mouseY;
+				glfwGetCursorPos(WindowController::GetInstance().GetWindow(), &mouseX, &mouseY);
+
+				double deltaX = mouseX - lastX;
+				double deltaY = mouseY - lastY;
+
+				int leftState = glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+				if (leftState == GLFW_PRESS)
+				{
+					m_fighterRotate.x += static_cast<float>(deltaY) * 0.1f;
+					m_fighterRotate.y += static_cast<float>(deltaX) * 0.1f;
+				}
+
+				int middleState = glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE);
+				if (middleState == GLFW_PRESS)
+				{
+					m_fighterRotate.z += static_cast<float>(deltaY) * 0.1f;
+				}
+
+				lastX = mouseX;
+				lastY = mouseY;
+
+				fighter.SetRotation(m_fighterRotate);
+			}
+
+			if (OpenGL::ToolWindow::RenderScale_Channel)
+			{
+				m_fighterScale = fighter.GetScale();
+
+				double deltaScaleX;
+				double deltaScaleY;
+				double mouseX, mouseY;
+				glfwGetCursorPos(WindowController::GetInstance().GetWindow(), &mouseX, &mouseY);
+
+				deltaScaleX = mouseX - lastX;
+				deltaScaleY = mouseY - lastY;
+
+				int leftState = glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+				if (leftState == GLFW_PRESS)
+				{
+					m_fighterScale.x += deltaScaleX * 0.00001f;
+					m_fighterScale.y += deltaScaleY * 0.00001f;
+
+				}
+				int middleState = glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE);
+				if (middleState == GLFW_PRESS)
+				{
+					m_fighterScale.z += deltaScaleY * 0.00001f;
+
+				}
+				lastX = mouseX;
+				lastY = mouseY;
+				fighter.SetScale(m_fighterScale);
+			}
+			if (OpenGL::ToolWindow::resetTransform_Btn)
+			{
+				m_fighterRotate = { -45.0f, 0.0f, 0.0f };
+				fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
+				fighter.SetRotation(m_fighterRotate);
+				fighter.SetScale({ 0.0008f, 0.0008f, 0.0008f });
+				OpenGL::ToolWindow::resetTransform_Btn = false;
+			}
+
+			fighter.Render(m_camera.GetProjection() * m_camera.GetView());
+		}
+
+		else if (OpenGL::ToolWindow::waterScene_Channel)
+		{
+
+		}
+		else if (OpenGL::ToolWindow::spaceScene_Channel)
+		{
+			m_camera.Rotate();
+			glm::mat4 view = glm::mat4(glm::mat3(m_camera.GetView()));
+			skybox.Render(m_camera.GetProjection() * view);
+		}
 		//m_postProcessor.End();
-		f.RenderText(fpsS, 100, 100, 0.5, { 1.0, 1.0, 0.0 });
+		fpsFont.RenderText(fpsS, 100, 100, 0.2f, { 1.0, 1.0, 0.0 });
+		mousePosition = "Mouse Pos: " + to_string((int)xPos) + "	" + to_string((int)yPos);
+		f.RenderText(mousePosition, 100, 130, 0.2f, { 1.0, 1.0, 0.0 });
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
@@ -162,8 +305,9 @@ void GameController::RunGame()
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed (a non-zero value means the window is closed)
 
+#pragma endregion Render
 
-
+#pragma region Cleanup
 	for (int count = 0; count < Mesh::Lights.size(); count++)
 	{
 		Mesh::Lights[count].Cleanup();
@@ -178,4 +322,5 @@ void GameController::RunGame()
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
 	m_shaderPost.Cleanup();
+#pragma endregion Cleanup
 }
