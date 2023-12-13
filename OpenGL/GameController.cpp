@@ -99,8 +99,9 @@ void GameController::RunGame()
 	Mesh astroid = Mesh();
 	astroid.Create(&m_shaderDiffuse, "../Assets/Models/Astroid.ase", 100);
 	astroid.SetCameraPosition(m_camera.GetPosition());
-	astroid.SetScale({ 0.05f, 0.05f, 0.05f });
-	astroid.SetPosition({ 0.0f, 0.0f, 0.0f });
+	astroid.SetScale({ 0.01f, 0.01f, 0.01f });
+	astroid.SetPosition({ glm::linearRand(-1.0f, 1.0f) ,
+		glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f) });
 
 	Skybox skybox = Skybox();
 	skybox.Create(&m_shaderSkybox, "../Assets/Models/SkyBox.obj",
@@ -290,9 +291,18 @@ void GameController::RunGame()
 		}
 		else if (OpenGL::ToolWindow::spaceScene_Channel)
 		{
+			glDisable(GL_DEPTH_TEST);
 			m_camera.Rotate();
 			glm::mat4 view = glm::mat4(glm::mat3(m_camera.GetView()));
 			skybox.Render(m_camera.GetProjection() * view);
+
+			m_fighterRotate = { -180.0f, 0.0f, 0.0f };
+			fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
+			fighter.SetRotation(m_fighterRotate);
+			fighter.SetScale({ 0.0008f, 0.0008f, 0.0008f });
+			astroid.Render(m_camera.GetProjection()* view);
+			fighter.Render(m_camera.GetProjection()* m_camera.GetView());
+			glEnable(GL_DEPTH_TEST);
 		}
 		//m_postProcessor.End();
 		fpsFont.RenderText(fpsS, 100, 100, 0.2f, { 1.0, 1.0, 0.0 });

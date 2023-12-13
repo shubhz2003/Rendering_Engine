@@ -258,10 +258,6 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		glBufferData(GL_ARRAY_BUFFER, m_instanceCount * sizeof(glm::mat4), m_instanceData.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-
-
-
-
 }
 
 string Mesh::Concat(string _s1, int _index, string _s2)
