@@ -229,7 +229,6 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		}
 	}
 
-
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
@@ -244,7 +243,7 @@ void Mesh::Create(Shader* _shader, string _file, int _instanceCount)
 		for (unsigned int i = 0; i < m_instanceCount; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(-20 + rand() % 40, -10 + rand() % 20, -10 + rand() % 20));
+			model = glm::translate(model, glm::vec3(-2000 + rand() % 4000, -1000 + rand() % 2000, -1000 + rand() % 2000));
 
 			for (int x = 0; x < 4; x++)
 			{
@@ -412,6 +411,8 @@ void Mesh::CalculateTransform()
 {
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
 	m_world = glm::rotate(m_world, glm::radians(m_rotation.x), glm::vec3(1, 0, 0));
+	m_world = glm::rotate(m_world, glm::radians(m_rotation.y), glm::vec3(0, 1, 0));
+	m_world = glm::rotate(m_world, glm::radians(m_rotation.z), glm::vec3(0, 0, 1));
 	m_world = glm::scale(m_world, m_scale);
 }
 
@@ -450,10 +451,10 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_textureNormal.GetTexture());
 }
 
-void Mesh::Render(glm::mat4 _pv)
+void Mesh::Render(glm::mat4 _pv, float rotSpeed)
 {
 	glUseProgram(m_shader->GetProgramID()); // Use our shader
-	m_rotation.x += 0.1f;
+	m_rotation.x += rotSpeed;
 
 	CalculateTransform();
 	SetShaderVariables(_pv);

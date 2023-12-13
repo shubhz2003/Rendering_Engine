@@ -1,6 +1,7 @@
 #include "PostProcessor.h"
 #include "WindowController.h"
 #include "Shader.h"
+#include "ToolWindow.h"
 
 PostProcessor::PostProcessor()
 {
@@ -113,6 +114,11 @@ void PostProcessor::End()
 
 	glUseProgram(m_postShader->GetProgramID()); // Use our shader
 	m_postShader->SetTextureSampler("ScreenTexture", GL_TEXTURE0, 0, m_textureColorbuffer);
+	m_postShader->SetFloat("Frequency", OpenGL::ToolWindow::trackBar_Frequency);
+	m_postShader->SetFloat("Amplitude", OpenGL::ToolWindow::trackBar_Amplitude);
+	m_postShader->SetFloat("Time", glfwGetTime());
+	m_postShader->SetInt("Tint", OpenGL::ToolWindow::RenderTintBlue_Channel);
+
 	BindAttributes();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(m_postShader->GetAttrVertices());

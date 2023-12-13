@@ -22,13 +22,14 @@ public:
 	void SetColor(glm::vec3 _color) { m_color = _color; }
 	glm::vec3 GetColor() { return m_color; }
 	void SetRotation(glm::vec3 _rotate) { m_rotation = _rotate; }
+	glm::vec3 GetRotation() { return m_rotation; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
 
 	// Methods
 	void Create(Shader* _shader, string _file, int _instanceCount = 1); // instance count is a optional paramenter
 	void Cleanup();
 	void CalculateTransform();
-	void Render(glm::mat4 _wvp);	//Technically _wvp is only _vp since world matrix exists in this contextand mesh has its own
+	void Render(glm::mat4 _wvp, float rotSpeed = 0.0f);	//Technically _wvp is only _vp since world matrix exists in this contextand mesh has its own
 
 	//Members
 	static vector<Mesh> Lights;

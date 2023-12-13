@@ -40,7 +40,6 @@ private:
 	glm::vec3 m_fighterRotate;
 	glm::vec3 m_fighterScale;
 	float lastX, lastY;
-	bool leftButtonPressed;
 };
 #endif // !GAME_CONTROLLER_H
 
