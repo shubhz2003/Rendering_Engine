@@ -114,7 +114,7 @@ void GameController::RunGame()
 	Mesh astroid = Mesh();
 	astroid.Create(&m_shaderDiffuse, "../Assets/Models/Astroid.ase", 100);
 	astroid.SetCameraPosition(m_camera.GetPosition());
-	astroid.SetScale({ 0.002f, 0.002f, 0.002f });
+	astroid.SetScale({ 0.005f, 0.005f, 0.005f });
 	astroid.SetPosition({0.0f, 0.0f, 0.0f});
 	
 	//m_meshes.push_back(astroid);
@@ -361,13 +361,14 @@ void GameController::RunGame()
 
 			m_fighterRotate = { -180.0f, 0.0f, 0.0f };
 			fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
-			fighter.SetRotation(m_fighterRotate);
-			fighter.SetScale({ 0.0008f, 0.0008f, 0.0008f });
+			fighter.SetRotation({90.0f, 0.0f, 0.0f});
+			fighter.SetScale(m_fighterScale);
 			astroid.Render(m_camera.GetProjection()* m_camera.GetView());
 			//for (unsigned int count = 0; count < m_meshes.size(); count++)
 			//{
 			//	m_meshes[count].Render(m_camera.GetProjection()* view);
 			//}
+			Mesh::Lights[0].SetPosition({ 0.0f, 0.0f, 2.0f });
 			fighter.Render(m_camera.GetProjection()* m_camera.GetView());
 		}
 
