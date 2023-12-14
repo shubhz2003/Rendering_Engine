@@ -359,7 +359,7 @@ void GameController::RunGame()
 			glm::mat4 view = glm::mat4(glm::mat3(m_camera.GetView()));
 			skybox.Render(m_camera.GetProjection() * view);
 
-			m_fighterRotate = { -180.0f, 0.0f, 0.0f };
+			//m_fighterRotate = { -180.0f, 0.0f, 0.0f };
 			fighter.SetPosition({ 0.0f, 0.0f, 0.0f });
 			fighter.SetRotation({90.0f, 0.0f, 0.0f});
 			fighter.SetScale(m_fighterScale);
